@@ -218,3 +218,5 @@ urlpatterns = [
 ]
 ```
 
+# <a name="admin.py">admin.py от Sergay</a> 
+
