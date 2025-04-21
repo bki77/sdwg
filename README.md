@@ -3,7 +3,7 @@
 [urls.py](#urls.py)  
 [admin.py](#Название_Ссылки)  
 
-# <a name="models.py">model.py от Sergay</a> 
+# <a name="models.py">Model.py от Sergay</a> 
 
 ## Создание  таблиц в базе данных
 
@@ -125,7 +125,7 @@ class Reviews_and_ratings(models.Model):
         verbose_name_plural = 'Отзывы и оценки'
 ```
 
-# <a name="views.py">views.py от Sergay</a> 
+# <a name="views.py">Views.py от Sergay</a> 
 
 ```
 from django.shortcuts import render, redirect, get_object_or_404
@@ -198,7 +198,7 @@ def booking_info(request, id):
     hotel = get_object_or_404(Hotel, id=id)  # Получаем отель по ID
     return render(request, 'hotel/booking_info.html', {'hotel': hotel})
 ```
-# <a name="urls.py">urls.py от Sergay</a> 
+# <a name="urls.py">Urls.py от Sergay</a> 
 
 #### импорты 
 ```
