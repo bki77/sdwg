@@ -127,14 +127,14 @@ class Reviews_and_ratings(models.Model):
 
 # <a name="views.py">Views.py от Sergay</a> 
 
-#### импорты чего?
+#### импорт перенаправления на страницы сайта
 ```
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from .models import Hotel, Room
 ```
-####
+#### ссылка на страницу сайта
 ```
 def hotel(request):
     return render(request, 'hotel/index.html')
@@ -187,13 +187,13 @@ def hotel_info(request, id):
     hotel = get_object_or_404(Hotel, id=id)  # Получаем отель по ID
     return render(request, 'hotel/hotel_info.html', {'hotel': hotel})
 ```
-#### бронирование по id или при отсутствие выводит ошибку
+#### получение информации о бронировнии по id или при отсутствие выводит ошибку и перенаправляет на hotel/booking.html страничку
 ```
 def booking(request, id):
     hotel = get_object_or_404(Hotel, id=id)  # Получаем отель по ID
     return render(request, 'hotel/booking.html', {'hotel': hotel})
 ```
-#### получение информации о бронировании по id или при отсутствие выводит ошибку
+#### получение информации о бронировнии по id или при отсутствие выводит ошибку и перенаправляет на hotel/booking_info.html  страничку
 ```
 def booking_info(request, id):
     hotel = get_object_or_404(Hotel, id=id)  # Получаем отель по ID
@@ -201,12 +201,12 @@ def booking_info(request, id):
 ```
 # <a name="urls.py">Urls.py от Sergay</a> 
 
-#### импорты 
+#### импорт из views.py
 ```
 from django.urls import path
 from . import views
 ```
-#### ссылки 
+#### вариации ссылок на страницы 
 ```
 urlpatterns = [
     path('', views.hotel, name = 'hotel'),
@@ -226,7 +226,7 @@ urlpatterns = [
 from django.contrib import admin
 from .models import Hotel, Room, Clients, Reservations, Reviews_and_ratings
 ```
-#### леее
+#### вывод таблицы на странице адмиинистратора django
 ```
 admin.site.register(Hotel)
 admin.site.register(Room)
