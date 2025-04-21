@@ -1,7 +1,7 @@
-[models.py](#models.py)
-[views.py](#Название_Ссылки)
-[urls.py](#Название_Ссылки)
-[admin.py](#Название_Ссылки)
+[models.py](#models.py)  
+[views.py](#Название_Ссылки)  
+[urls.py](#Название_Ссылки)  
+[admin.py](#Название_Ссылки)  
 
 # <a name="models.py">model.py от Sergay</a> 
 
