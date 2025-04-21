@@ -119,14 +119,14 @@ class Reviews_and_ratings(models.Model):
         verbose_name_plural = 'Отзывы и оценки'
 ```
 
-# views.py
+# <a name="views.py">views.py от Sergay</a> 
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from .models import Hotel, Room
 
 #
-
 ```
 def hotel(request):
     return render(request, 'hotel/index.html')
