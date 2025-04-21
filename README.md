@@ -1,5 +1,6 @@
 [models.py](#models.py)  
-[views.py](#views.py)  
+[views.py](#views.py) 
+[forms.py](#forms.py)  
 [urls.py](#urls.py)  
 [admin.py](#admin.py)  
 
@@ -7,10 +8,12 @@
 
 ## Создание  таблиц в базе данных
 
-#### Импорт
+#### Импорты
 ```
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 ```
 
 #### Cоздание таблицы  Hotel
@@ -23,7 +26,7 @@ class Hotel(models.Model):
     email = models.CharField('Email', max_length=100)
     description = models.CharField('Описание', max_length=100)
     rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)], default=0)
-    price = models.IntegerField('Цена', max_length=50)
+    price = models.IntegerField('Цена')
 ```
 #### вывод данных в браузер для таблицы Отель
 ```
@@ -47,15 +50,16 @@ class Room(models.Model):
 ```
 #### параметры для комнаты
 ```
-hotel_id = models.ForeignKey(Hotel, on_delete=models.CASCADE)
-    type = models.IntegerField('Тип комнат', choices=ROOM_TYPE_CHOICES)
+    hotel_id = models.ForeignKey(Hotel, on_delete=models.CASCADE, verbose_name='Отель')
+    type = models.IntegerField('Тип комнаты', choices=ROOM_TYPE_CHOICES)
     minbar = models.BooleanField('Мини-Бар', default=True)
     conditioner = models.BooleanField('Кондиционер', default=True)
 ```
 #### вывод данных в браузер для таблицы Room
 ```
     def __str__(self):
-        return self.type
+        # Получаем человекочитаемое название типа комнаты
+        return f"{self.get_type_display()} (Отель: {self.hotel_id.name})"
 ```    
 #### подмена  названий на Комната, Комнаты
 ```  
@@ -66,12 +70,12 @@ hotel_id = models.ForeignKey(Hotel, on_delete=models.CASCADE)
 ## Таблица Clients
 ```
 class Clients(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)  
     phio = models.CharField('ФИО', max_length=100)
     phone = models.CharField('Телефонный номер', max_length=11)
     email = models.CharField('Email', max_length=100)
-    password = models.CharField('Пароль', max_length=200)
-    passport_seria = models.IntegerField('Серия паспорта', max_length=100)
-    passport_num = models.IntegerField('Номер паспорта', max_length=100)
+    passport_seria = models.IntegerField('Серия паспорта')
+    passport_num = models.IntegerField('Номер паспорта')
 ```
 #### вывод данных в браузер для таблицы Clients
 ```
@@ -88,8 +92,8 @@ class Clients(models.Model):
 ## таблица Reservations
 ```
 class Reservations(models.Model):
-    client_id = models.ForeignKey(Clients, on_delete=models.CASCADE)
-    room_id = models.ForeignKey(Room, on_delete=models.CASCADE)
+    client_id = models.ForeignKey(Clients, on_delete=models.CASCADE, verbose_name='Клиент')
+    room_id = models.ForeignKey(Room, on_delete=models.CASCADE, verbose_name='Комната')
     check_in_date = models.DateTimeField('Дата заезда')
     departure_date = models.DateTimeField('Дата выезда')
     total_amount = models.IntegerField('Общая сумма')
@@ -97,22 +101,29 @@ class Reservations(models.Model):
 #### вывод данных в браузер для таблицы Reservations
 ```
     def __str__(self):
-        return self.client_id
+        return f"Бронирование #{self.id} - {self.client_id.phio}"
 ```
-#### подмена  названий на Отношения
+#### подмена  названий на Бронирование, Бронирования
 ```
     class Meta:
-        verbose_name_plural = 'Отношения'
+        verbose_name = 'Бронирование'
+        verbose_name_plural = 'Бронирования'
 ```
 
 ## таблица Reviews_and_ratings
 ```
 class Reviews_and_ratings(models.Model):
-    client_id = models.ForeignKey(Clients, on_delete=models.CASCADE)
-    hotel_id = models.ForeignKey(Hotel, on_delete=models.CASCADE)
-    estimation  = models.IntegerField('Оценка')
+    client_id = models.ForeignKey(Clients, on_delete=models.CASCADE, verbose_name='Клиент')
+    hotel_id = models.ForeignKey(Hotel, on_delete=models.CASCADE, verbose_name='Отель')
+    estimation = models.IntegerField('Оценка', validators=[MinValueValidator(1), MaxValueValidator(5)])
     comment = models.CharField('Комментарий', max_length=200)
-    date  = models.DateTimeField('Дата публикации')
+    date = models.DateTimeField('Дата публикации', auto_now_add=True)
+```
+#### функци проверки корректности введённой даты
+```
+    def clean(self):
+      if self.departure_date <= self.check_in_date:
+        raise ValidationError("Дата выезда должна быть позже даты заезда")
 ```
 #### вывод данных в браузер для таблицы Reviews_and_ratings
 ```
@@ -122,6 +133,7 @@ class Reviews_and_ratings(models.Model):
 #### подмена  названий на Отзывы и оценки
 ```
     class Meta:
+        verbose_name = 'Отзыв и оценка'
         verbose_name_plural = 'Отзывы и оценки'
 ```
 
@@ -131,8 +143,11 @@ class Reviews_and_ratings(models.Model):
 ```
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login
-from .models import Hotel, Room
+from django.contrib.auth import authenticate, login, logout
+from .models import Hotel, Room, Clients, Reservations, User
+from django.contrib import messages
+from .forms import RegisterForm, LoginForm
+from django.core.exceptions import ObjectDoesNotExist
 ```
 #### ссылки на страницы сайта
 ```
@@ -199,6 +214,36 @@ def booking_info(request, id):
     hotel = get_object_or_404(Hotel, id=id)  # Получаем отель по ID
     return render(request, 'hotel/booking_info.html', {'hotel': hotel})
 ```
+
+# <a name="forms.py">forms.py от Sergay</a>
+#### импорт из django необходимых модулей для создания форм 
+```
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
+```
+#### формы для входа на сайт
+```
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(label='Телефон или Email')
+    password = forms.CharField(label='Пароль', widget=forms.PasswordInput)
+```
+#### формы для регистрациии на сайте
+```
+class RegisterForm(UserCreationForm):
+    phio = forms.CharField(label='ФИО', max_length=100, required=True)
+    phone = forms.CharField(label='Телефон', max_length=11, required=True)
+    email = forms.EmailField(label='Email', required=True)
+    passport_seria = forms.IntegerField(label='Серия паспорта', required=True)
+    passport_num = forms.IntegerField(label='Номер паспорта', required=True)
+```
+#### заполнение полей из формы
+```
+    class Meta(UserCreationForm.Meta):
+        fields = ('username', 'email', 'password1', 'password2',
+                 'phio', 'phone', 'passport_seria', 'passport_num')
+```
+
 # <a name="urls.py">Urls.py от Sergay</a> 
 
 #### импорт из views.py
