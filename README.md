@@ -1,13 +1,19 @@
 [models.py](#models.py)  
 [views.py](#views.py)  
-[urls.py](#Название_Ссылки)  
+[urls.py](#urls.py)  
 [admin.py](#Название_Ссылки)  
 
 # <a name="models.py">model.py от Sergay</a> 
 
 ## Создание  таблиц в базе данных
 
-### Cоздание таблицы  Hotel
+#### Импорты
+```
+from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
+```
+
+#### Cоздание таблицы  Hotel
 
 ```
 class Hotel(models.Model):
@@ -192,5 +198,23 @@ def booking_info(request, id):
     hotel = get_object_or_404(Hotel, id=id)  # Получаем отель по ID
     return render(request, 'hotel/booking_info.html', {'hotel': hotel})
 ```
+# <a name="urls.py">urls.py от Sergay</a> 
 
+#### импорты 
+```
+from django.urls import path
+from . import views
+```
+#### ссылки 
+```
+urlpatterns = [
+    path('', views.hotel, name = 'hotel'),
+    path('hotel_info/<int:id>/', views.hotel_info, name='hotel_info'),
+    path('booking/<int:id>/', views.booking, name = 'booking'),
+    path('booking_info/<int:id>/', views.booking_info, name = 'booking_info'),
+    path('login/', views.login, name = 'login'),
+    path('register/', views.register, name = 'register'),
+    path('profile/', views.profile, name = 'profile'),
+]
+```
 
