@@ -1,13 +1,13 @@
 [models.py](#models.py)  
 [views.py](#views.py)  
 [urls.py](#urls.py)  
-[admin.py](#Название_Ссылки)  
+[admin.py](#admin.py)  
 
 # <a name="models.py">Model.py от Sergay</a> 
 
 ## Создание  таблиц в базе данных
 
-#### Импорты
+#### Импорт
 ```
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -127,6 +127,7 @@ class Reviews_and_ratings(models.Model):
 
 # <a name="views.py">Views.py от Sergay</a> 
 
+#### импорты чего?
 ```
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -168,31 +169,31 @@ def register(request):
 def profile(request):
     return render (request, 'profile/user.html')
 ```
-####
+#### получение данных с таблицы hotel
 ```
 def hotel(request):
     hotel = Hotel.objects.all()
     return render(request, 'hotel/index.html', {'hotel': hotel})
 ```
-####
+#### получение данных с таблицы Room
 ```
 def hotel_info(request):
     hotel_info = Room.objects.all()
     return render(request, 'hotel/hotel_info.html', {'hotel_info': hotel_info})
 ```
-####
+#### получение информации об отеле по id или при отсутствие выводит ошибку
 ```
 def hotel_info(request, id):
     hotel = get_object_or_404(Hotel, id=id)  # Получаем отель по ID
     return render(request, 'hotel/hotel_info.html', {'hotel': hotel})
 ```
-####
+#### бронирование по id или при отсутствие выводит ошибку
 ```
 def booking(request, id):
     hotel = get_object_or_404(Hotel, id=id)  # Получаем отель по ID
     return render(request, 'hotel/booking.html', {'hotel': hotel})
 ```
-####
+#### получение информации о бронировании по id или при отсутствие выводит ошибку
 ```
 def booking_info(request, id):
     hotel = get_object_or_404(Hotel, id=id)  # Получаем отель по ID
@@ -219,4 +220,18 @@ urlpatterns = [
 ```
 
 # <a name="admin.py">admin.py от Sergay</a> 
+
+#### импорты наших моделей таблиц
+```
+from django.contrib import admin
+from .models import Hotel, Room, Clients, Reservations, Reviews_and_ratings
+```
+#### леее
+```
+admin.site.register(Hotel)
+admin.site.register(Room)
+admin.site.register(Clients)
+admin.site.register(Reservations)
+admin.site.register(Reviews_and_ratings)
+```
 
