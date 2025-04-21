@@ -1,6 +1,8 @@
-# Создание  таблиц в базе данных
+# models.py от sergei
 
-## Cоздание таблицы  Hotel
+## Создание  таблиц в базе данных
+
+### Cоздание таблицы  Hotel
 
 ```
 class Hotel(models.Model):
@@ -90,4 +92,24 @@ class Reservations(models.Model):
 ```
     class Meta:
         verbose_name_plural = 'Отношения'
+```
+
+## таблица Reviews_and_ratings
+```
+class Reviews_and_ratings(models.Model):
+    client_id = models.ForeignKey(Clients, on_delete=models.CASCADE)
+    hotel_id = models.ForeignKey(Hotel, on_delete=models.CASCADE)
+    estimation  = models.IntegerField('Оценка')
+    comment = models.CharField('Комментарий', max_length=200)
+    date  = models.DateTimeField('Дата публикации')
+```
+#### вывод данных в браузер для таблицы Reviews_and_ratings
+```
+    def __str__(self):
+        return self.client_id
+```
+#### подмена  названий на Отзывы и оценки
+```
+    class Meta:
+        verbose_name_plural = 'Отзывы и оценки'
 ```
