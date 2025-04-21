@@ -60,7 +60,7 @@ class Clients(models.Model):
     passport_seria = models.IntegerField('Серия паспорта', max_length=100)
     passport_num = models.IntegerField('Номер паспорта', max_length=100)
 ```
-####
+#### вывод данных в браузер
 ```
     def __str__(self):
         return self.phio
