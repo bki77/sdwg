@@ -134,7 +134,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from .models import Hotel, Room
 ```
-#### ссылка на страницу сайта
+#### ссылки на страницы сайта
 ```
 def hotel(request):
     return render(request, 'hotel/index.html')
@@ -169,13 +169,13 @@ def register(request):
 def profile(request):
     return render (request, 'profile/user.html')
 ```
-#### получение данных с таблицы hotel
+#### получение данных об отеле из таблицы Hotel
 ```
 def hotel(request):
     hotel = Hotel.objects.all()
     return render(request, 'hotel/index.html', {'hotel': hotel})
 ```
-#### получение данных с таблицы Room
+#### получение данных о комнате из таблицы Hotel
 ```
 def hotel_info(request):
     hotel_info = Room.objects.all()
@@ -221,7 +221,7 @@ urlpatterns = [
 
 # <a name="admin.py">admin.py от Sergay</a> 
 
-#### импорты наших моделей таблиц
+#### импортируем из файла .models наши таблицы
 ```
 from django.contrib import admin
 from .models import Hotel, Room, Clients, Reservations, Reviews_and_ratings
