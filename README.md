@@ -4,6 +4,7 @@
 [forms.py](#forms.py)  
 [urls.py](#urls.py)  
 [admin.py](#admin.py)  
+### ![ERD](https://imgur.com/a/iqafFLK)
 
 # <a name="models.py">Model.py от Sergay</a> 
 
