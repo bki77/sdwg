@@ -282,4 +282,4 @@ admin.site.register(Reservations)
 admin.site.register(Reviews_and_ratings)
 ```
 
-### ER-диаграмма<a name="erd_diddy" style="border: 5px solid red;">![ERD](ERD.png)</a> 
+### ER-диаграмма<a name="erd_diddy" style="border: 10px solid black;">![ERD](ERD.png)</a> 
