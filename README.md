@@ -4,7 +4,7 @@
 [forms.py](#forms.py)  
 [urls.py](#urls.py)  
 [admin.py](#admin.py)  
-### ![ERD](ERD.png)
+[ERD](#erd_diddy)
 
 # <a name="models.py">Model.py от Sergay</a> 
 
@@ -282,3 +282,4 @@ admin.site.register(Reservations)
 admin.site.register(Reviews_and_ratings)
 ```
 
+### ER-диаграмма<a name="erd_diddy">![ERD](ERD.png)</a> 
